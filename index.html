@@ -2,300 +2,740 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Checklist · Maca Trading</title>
+
 <meta name="theme-color" content="#0d0f12">
+<meta name="description" content="Checklist pre-operación · setup · gestión · cabeza">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap');
-  :root {
-    --bg: #0d0f12;
-    --bg2: #13161a;
-    --bg3: #1a1e24;
-    --border: #2a313b;
-    --text: #e8edf2;
-    --text2: #8a97a8;
-    --text3: #556070;
-    --accent: #4f9cf9;
-    --green: #3ecf8e;
-    --red: #f05252;
-    --pink: #f472b6;
-    --amber: #f59e0b;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Outfit', sans-serif;
-    font-size: 15px;
-    min-height: 100vh;
-    padding: 16px;
-    padding-bottom: 40px;
-  }
-  h1 {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-  .sub {
-    font-size: 11px;
-    color: var(--text3);
-    font-family: 'Roboto Mono', monospace;
-    margin-bottom: 20px;
-    letter-spacing: .05em;
-  }
-  .strats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  .strat-btn {
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--bg3);
-    color: var(--text2);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: 'Outfit', sans-serif;
-    transition: all .15s;
-  }
-  .strat-btn.on-blue { background: #0f2a4a; border-color: #4f9cf9; color: #4f9cf9; }
-  .strat-btn.on-red { background: #3d1212; border-color: #f05252; color: #f05252; }
-  .strat-btn.on-pink { background: #3d1030; border-color: #f472b6; color: #f472b6; }
-  .strat-btn.on-white { background: #2a2f36; border-color: #c0c9d4; color: #c0c9d4; }
-  .strat-btn.on-black { background: #1a1e24; border-color: #e8edf2; color: #e8edf2; }
-  .strat-btn.on-green { background: #0d2a1a; border-color: #3ecf8e; color: #3ecf8e; }
+<meta name="apple-mobile-web-app-title" content="Checklist">
+<meta name="mobile-web-app-capable" content="yes">
 
-  .panel {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    display: none;
-  }
-  .panel.visible { display: block; }
-  .panel-title {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--text3);
-    font-family: 'Roboto Mono', monospace;
-    margin-bottom: 14px;
-  }
-  .item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    user-select: none;
-  }
-  .item:last-of-type { border-bottom: none; }
-  .item input {
-    margin-top: 3px;
-    width: 18px;
-    height: 18px;
-    accent-color: var(--accent);
-    flex-shrink: 0;
-    cursor: pointer;
-  }
-  .item span {
-    font-size: 14px;
-    color: var(--text2);
-    line-height: 1.45;
-  }
-  .item.checked span {
-    color: var(--text);
-  }
-  .score {
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .score-num {
-    font-family: 'Roboto Mono', monospace;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  .copy-btn {
-    padding: 8px 14px;
-    background: var(--accent);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'Outfit', sans-serif;
-  }
-  .copy-btn:active { transform: scale(0.97); }
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--green);
-    color: #0d0f12;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    opacity: 0;
-    transition: opacity .25s;
-    pointer-events: none;
-    z-index: 100;
-  }
-  .toast.show { opacity: 1; }
-  .reset-btn {
-    margin-top: 12px;
-    width: 100%;
-    padding: 10px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text3);
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Outfit', sans-serif;
-  }
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="%230d0f12"/><path d="M140 264 L216 340 L372 176" stroke="%234f9cf9" stroke-width="52" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'>
+<link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="%230d0f12"/><path d="M140 264 L216 340 L372 176" stroke="%234f9cf9" stroke-width="52" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'>
+<link rel="manifest" href='data:application/manifest+json;utf8,{"name":"Checklist Trading","short_name":"Checklist","description":"Checklist pre-operacion","start_url":".","display":"standalone","orientation":"portrait","background_color":"%230d0f12","theme_color":"%230d0f12","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 rx=%2296%22 fill=%22%230d0f12%22/><path d=%22M140 264 L216 340 L372 176%22 stroke=%22%234f9cf9%22 stroke-width=%2252%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/></svg>","sizes":"any","type":"image/svg+xml","purpose":"any"}]}'>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#0d0f12; --bg2:#13161a; --bg3:#1a1e24; --bg4:#21262e;
+  --border:#2a313b; --border2:#36404d;
+  --text:#e8edf2; --text2:#8a97a8; --text3:#556070;
+  --accent:#4f9cf9; --accent2:#0f2a4a;
+  --green:#3ecf8e; --green2:#0d3d26;
+  --red:#f05252; --red2:#3d1212;
+  --amber:#f59e0b; --amber2:#3d2800;
+  --pink:#f472b6; --purple:#a78bfa;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Outfit',sans-serif;font-size:16px;
+  overscroll-behavior:none;
+  touch-action:manipulation;
+  display:flex;flex-direction:column;
+  padding:calc(var(--safe-t) + 12px) 16px calc(var(--safe-b) + 12px);
+}
+button{font-family:'Outfit',sans-serif;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:0;height:0}
+
+/* ===== Barra superior ===== */
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-shrink:0;min-height:34px}
+.back{
+  width:38px;height:38px;flex-shrink:0;border-radius:10px;
+  background:var(--bg3);border:1px solid var(--border);
+  display:none;align-items:center;justify-content:center;font-size:19px;color:var(--text2)
+}
+.back.on{display:flex}
+.back:active{background:var(--bg4)}
+.progress-wrap{flex:1;min-width:0}
+.progress-meta{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:'Roboto Mono',monospace;font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:6px
+}
+.progress-meta b{color:var(--text2);font-weight:600}
+.progress-bar{height:5px;border-radius:3px;background:var(--bg3);overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--accent);width:0;transition:width .28s cubic-bezier(.4,0,.2,1)}
+
+/* ===== Contenedor de pantallas ===== */
+.screen{display:none;flex:1;min-height:0;flex-direction:column;animation:fade .18s ease}
+.screen.on{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ===== Home ===== */
+.title{font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:4px}
+.sub{font-size:11px;color:var(--text3);font-family:'Roboto Mono',monospace;letter-spacing:.08em;margin-bottom:22px}
+.label{
+  font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text3);font-family:'Roboto Mono',monospace;margin-bottom:10px
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chip{
+  min-height:58px;border-radius:14px;border:1.5px solid var(--border);
+  background:var(--bg2);color:var(--text2);font-size:16px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;transition:transform .1s
+}
+.chip:active{transform:scale(.96)}
+.chip.on{background:var(--bg4);border-color:var(--text2);color:var(--text)}
+.chip.on-Blue {background:#0f2a4a;border-color:#4f9cf9;color:#4f9cf9}
+.chip.on-Red  {background:#3d1212;border-color:#f05252;color:#f05252}
+.chip.on-Pink {background:#3d1030;border-color:#f472b6;color:#f472b6}
+.chip.on-White{background:#2a2f36;border-color:#c0c9d4;color:#c0c9d4}
+.chip.on-Black{background:#1a1e24;border-color:#e8edf2;color:#e8edf2}
+.chip.on-Green{background:#0d2a1a;border-color:#3ecf8e;color:#3ecf8e}
+.chip small{display:block;font-size:10px;font-weight:500;opacity:.6;font-family:'Roboto Mono',monospace;margin-top:2px}
+
+.start{
+  margin-top:auto;width:100%;min-height:62px;border-radius:14px;
+  background:var(--accent);color:#fff;font-size:17px;font-weight:700;letter-spacing:-.2px;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .1s
+}
+.start:active{transform:scale(.985)}
+.start:disabled{background:var(--bg3);color:var(--text3);font-weight:600}
+.resume{
+  margin-top:12px;width:100%;padding:13px;border-radius:12px;
+  background:var(--amber2);border:1px solid var(--amber);color:var(--amber);
+  font-size:13px;font-weight:600;display:none
+}
+.resume.on{display:block}
+
+/* ===== Pregunta ===== */
+.q-group{
+  display:inline-flex;align-items:center;gap:6px;align-self:flex-start;
+  font-family:'Roboto Mono',monospace;font-size:10px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 11px;border-radius:20px;margin-bottom:20px
+}
+.q-group.g-cabeza{background:var(--purple);color:#1a1030;opacity:.92}
+.q-group.g-setup {background:var(--accent);color:#06203d}
+.q-group.g-gestion{background:var(--amber);color:#3d2800}
+.q-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:8px;min-height:0;overflow-y:auto}
+.q-text{font-size:25px;font-weight:700;line-height:1.25;letter-spacing:-.6px;margin-bottom:12px}
+.q-hint{font-size:14px;color:var(--text2);line-height:1.5}
+.q-warn{
+  margin-top:16px;padding:11px 14px;border-radius:10px;
+  background:var(--bg2);border-left:3px solid var(--amber);
+  font-size:12.5px;color:var(--text2);line-height:1.45
+}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex-shrink:0}
+.ans{
+  min-height:72px;border-radius:16px;border:2px solid var(--border2);
+  background:var(--bg2);font-size:19px;font-weight:700;letter-spacing:.02em;
+  display:flex;align-items:center;justify-content:center;transition:transform .09s
+}
+.ans:active{transform:scale(.955)}
+.ans.no{color:var(--text2)}
+.ans.si{color:var(--text)}
+.ans.no:active{background:var(--red2);border-color:var(--red);color:var(--red)}
+.ans.si:active{background:var(--green2);border-color:var(--green);color:var(--green)}
+
+/* ===== Calculadora ===== */
+.calc-body{flex:1;overflow-y:auto;min-height:0;padding-bottom:8px}
+.field{margin-bottom:14px}
+.field label{
+  display:block;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text3);font-family:'Roboto Mono',monospace;margin-bottom:6px
+}
+.field input,.field select{
+  width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;
+  padding:14px 14px;font-size:17px;color:var(--text);
+  font-family:'Roboto Mono',monospace;font-weight:600;outline:none;
+  -webkit-appearance:none;appearance:none
+}
+.field input:focus,.field select:focus{border-color:var(--accent)}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--text3) 50%),linear-gradient(135deg,var(--text3) 50%,transparent 50%);background-position:calc(100% - 20px) 22px,calc(100% - 14px) 22px;background-size:6px 6px;background-repeat:no-repeat}
+.field .note{font-size:11px;color:var(--text3);margin-top:6px;line-height:1.4}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out{
+  background:var(--accent2);border:1.5px solid var(--accent);border-radius:14px;
+  padding:16px;margin:4px 0 14px;text-align:center
+}
+.out-lbl{font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);opacity:.8;margin-bottom:4px}
+.out-val{font-family:'Roboto Mono',monospace;font-size:34px;font-weight:600;color:var(--accent);letter-spacing:-1px;line-height:1.1}
+.out-sub{font-family:'Roboto Mono',monospace;font-size:12px;color:var(--text2);margin-top:6px}
+.next{
+  width:100%;min-height:62px;border-radius:14px;background:var(--accent);color:#fff;
+  font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:transform .1s
+}
+.next:active{transform:scale(.985)}
+.next.ghost{background:transparent;border:1.5px solid var(--border2);color:var(--text2);font-weight:600;font-size:15px;min-height:52px}
+
+/* ===== Resultado ===== */
+.res-body{flex:1;overflow-y:auto;min-height:0}
+.verdict{border-radius:16px;padding:22px 18px;text-align:center;margin-bottom:16px;border:1.5px solid}
+.verdict.ok  {background:var(--green2);border-color:var(--green)}
+.verdict.warn{background:var(--amber2);border-color:var(--amber)}
+.verdict.bad {background:var(--red2);border-color:var(--red)}
+.verdict-score{font-family:'Roboto Mono',monospace;font-size:52px;font-weight:600;letter-spacing:-2px;line-height:1}
+.verdict.ok .verdict-score{color:var(--green)}
+.verdict.warn .verdict-score{color:var(--amber)}
+.verdict.bad .verdict-score{color:var(--red)}
+.verdict-lbl{font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.75;margin-bottom:8px}
+.verdict.ok .verdict-lbl,.verdict.ok .verdict-txt{color:var(--green)}
+.verdict.warn .verdict-lbl,.verdict.warn .verdict-txt{color:var(--amber)}
+.verdict.bad .verdict-lbl,.verdict.bad .verdict-txt{color:var(--red)}
+.verdict-txt{font-size:15px;font-weight:600;margin-top:10px;line-height:1.4}
+
+.blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center}
+.block-lbl{font-family:'Roboto Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.block-val{font-family:'Roboto Mono',monospace;font-size:19px;font-weight:600}
+
+.miss{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.miss-title{font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.miss li{list-style:none;font-size:13.5px;color:var(--text2);line-height:1.45;padding:7px 0 7px 18px;position:relative;border-bottom:1px solid var(--border)}
+.miss li:last-child{border-bottom:none}
+.miss li::before{content:"×";position:absolute;left:2px;color:var(--red);font-weight:700}
+.reminder{
+  background:var(--bg2);border-left:3px solid var(--accent);border-radius:10px;
+  padding:12px 15px;margin-bottom:16px;font-size:13px;color:var(--text2);line-height:1.5
+}
+.reminder b{color:var(--text)}
+.actions{display:flex;flex-direction:column;gap:10px;flex-shrink:0;padding-top:4px}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;left:50%;bottom:calc(var(--safe-b) + 90px);transform:translate(-50%,10px);
+  background:var(--green);color:#07130d;padding:12px 20px;border-radius:10px;
+  font-size:14px;font-weight:700;opacity:0;transition:all .25s;pointer-events:none;z-index:100;
+  box-shadow:0 8px 24px rgba(0,0,0,.5)
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-height:680px){
+  .q-text{font-size:21px}
+  .verdict-score{font-size:42px}
+  .ans{min-height:64px}
+}
 </style>
 </head>
 <body>
 
-<h1>Checklist Must-have</h1>
-<div class="sub">Elegí estrategia → marcá → copiá el score al journal</div>
-
-<div class="strats">
-  <button class="strat-btn" onclick="show('Blue', this)">Blue</button>
-  <button class="strat-btn" onclick="show('Red', this)">Red</button>
-  <button class="strat-btn" onclick="show('Pink', this)">Pink</button>
-  <button class="strat-btn" onclick="show('White', this)">White</button>
-  <button class="strat-btn" onclick="show('Black', this)">Black</button>
-  <button class="strat-btn" onclick="show('Green', this)">Green</button>
-</div>
-
-<div class="panel" id="panel">
-  <div class="panel-title" id="panel-title">Must-have</div>
-  <div id="items"></div>
-  <div class="score">
-    <span class="score-num" id="score">0 / 0</span>
-    <button class="copy-btn" onclick="copyScore()">Copiar score</button>
+<!-- ===== BARRA SUPERIOR ===== -->
+<div class="top">
+  <button class="back" id="back" onclick="goBack()" aria-label="Atrás">‹</button>
+  <div class="progress-wrap">
+    <div class="progress-meta"><span id="p-left">Checklist</span><b id="p-right"></b></div>
+    <div class="progress-bar"><div class="progress-fill" id="p-fill"></div></div>
   </div>
-  <button class="reset-btn" onclick="resetChecks()">Limpiar checks</button>
 </div>
 
-<div class="toast" id="toast">Score copiado</div>
+<!-- ===== HOME ===== -->
+<div class="screen on" id="s-home">
+  <div class="title">Antes de entrar</div>
+  <div class="sub">CABEZA · SETUP · GESTIÓN</div>
+
+  <div class="label">Estrategia</div>
+  <div class="grid3" id="strat-grid" style="margin-bottom:22px"></div>
+
+  <div class="label">Estilo</div>
+  <div class="grid3" id="estilo-grid"></div>
+
+  <button class="resume" id="resume-btn" onclick="resumeRun()"></button>
+  <button class="start" id="start-btn" onclick="startRun()" disabled>Elegí estrategia y estilo</button>
+</div>
+
+<!-- ===== PREGUNTA ===== -->
+<div class="screen" id="s-q">
+  <div class="q-group" id="q-group">SETUP</div>
+  <div class="q-body">
+    <div class="q-text" id="q-text"></div>
+    <div class="q-hint" id="q-hint"></div>
+    <div class="q-warn" id="q-warn" style="display:none"></div>
+  </div>
+  <div class="answers">
+    <button class="ans no" onclick="answer(false)">NO</button>
+    <button class="ans si" onclick="answer(true)">SÍ</button>
+  </div>
+</div>
+
+<!-- ===== CALCULADORA DE LOTAJE ===== -->
+<div class="screen" id="s-calc">
+  <div class="q-group g-gestion">GESTIÓN</div>
+  <div class="calc-body">
+    <div class="q-text" style="font-size:22px;margin-bottom:16px">Tamaño de la posición</div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Capital ($)</label>
+        <input type="text" id="c-cap" inputmode="decimal" placeholder="10000" oninput="calc()">
+      </div>
+      <div class="field">
+        <label>Riesgo (%)</label>
+        <input type="text" id="c-risk" inputmode="decimal" placeholder="1" oninput="calc()">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Instrumento</label>
+      <select id="c-inst" onchange="onInstChange()"></select>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Distancia al SL (pips)</label>
+        <input type="text" id="c-pips" inputmode="decimal" placeholder="25" oninput="calc()">
+      </div>
+      <div class="field">
+        <label>$ por pip / lote</label>
+        <input type="text" id="c-pipval" inputmode="decimal" placeholder="10" oninput="calc(); savePipVal()">
+      </div>
+    </div>
+
+    <div class="out">
+      <div class="out-lbl">Lotaje</div>
+      <div class="out-val" id="c-lot">–</div>
+      <div class="out-sub" id="c-sub">Completá capital, riesgo y distancia al SL</div>
+    </div>
+
+    <div class="field">
+      <div class="note">El valor del pip depende de tu bróker. Verificalo una vez y queda guardado por instrumento.</div>
+    </div>
+  </div>
+  <button class="next" onclick="afterCalc()">Continuar →</button>
+</div>
+
+<!-- ===== RESULTADO ===== -->
+<div class="screen" id="s-res">
+  <div class="res-body">
+    <div class="verdict" id="verdict">
+      <div class="verdict-lbl">Must-have del setup</div>
+      <div class="verdict-score" id="v-score">0 / 0</div>
+      <div class="verdict-txt" id="v-txt"></div>
+    </div>
+
+    <div class="blocks">
+      <div class="block"><div class="block-lbl">Cabeza</div><div class="block-val" id="b-cabeza">–</div></div>
+      <div class="block"><div class="block-lbl">Setup</div><div class="block-val" id="b-setup">–</div></div>
+      <div class="block"><div class="block-lbl">Gestión</div><div class="block-val" id="b-gestion">–</div></div>
+    </div>
+
+    <div class="miss" id="miss-box" style="display:none">
+      <div class="miss-title" id="miss-title">Lo que no se cumple</div>
+      <ul id="miss-list"></ul>
+    </div>
+
+    <div class="reminder" id="reminder"></div>
+  </div>
+
+  <div class="actions">
+    <button class="next" onclick="copyResumen()">Copiar para el journal</button>
+    <button class="next ghost" onclick="newRun()">Nuevo check</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copiado</div>
 
 <script>
-const LISTS = {
+/* =========================================================
+   DATOS
+   ========================================================= */
+
+// Must-have por estrategia. El CONTEO coincide con el journal
+// (Blue 6 · Red 5 · Pink 5 · White 5 · Black 5 · Green 4)
+// para que el score sea el mismo en las dos apps.
+const SETUP = {
   Blue: [
-    "Zona soporte/resistencia + desaceleración",
-    "Giro agresivo (Morning/Evening Star o Envolvente) — si no hay, se invalida",
-    "Ruptura de estructura + EMA50 1H con RCC",
-    "Pullback 0.38–0.50 a la EMA50 1H (sin confirmar ruptura en el pullback)",
-    "Diagonal limpia (mín. 3 toques) o EMA50 5m + RCC",
-    "RR ≥ 2R"
+    {t:"Zona S/R + desaceleración", d:"El precio llega con fuerza a soporte/resistencia, se frena y gira."},
+    {t:"Giro agresivo", d:"Morning/Evening Star o envolvente. Si no hay, se invalida."},
+    {t:"Ruptura de estructura + EMA50 1H", d:"Las dos con RCC: cierre de cuerpo del lado buscado y vela siguiente que confirma."},
+    {t:"Pullback 0.38–0.50 a la EMA50 1H", d:"Sin confirmar ruptura durante el pullback. Desacelera, frena y gira."},
+    {t:"Diagonal limpia en 5min + RCC", d:"Mínimo 3 toques. Si no hay diagonal clara, EMA50 de 5min."},
+    {t:"RR ≥ 2R", d:"TP en EMA50 de 4h o máximos/mínimos. SL en el primer nivel de fibo cercano."}
   ],
   Red: [
-    "Zona soporte/resistencia + envolvente con mucha fuerza — si no hay, se invalida",
-    "Ruptura EMA50 4H + estructura con RCC",
-    "Pullback 0.30–0.50 hasta cruce de EMAs (sin romper EMA 1H con fuerza)",
-    "Diagonal limpia + RCC",
-    "RR ≥ 2R"
+    {t:"Zona S/R + envolvente con fuerza", d:"Vela que se come las dos anteriores. Si no hay, se invalida."},
+    {t:"Ruptura EMA50 4H + estructura", d:"Las dos con RCC."},
+    {t:"Pullback 0.30–0.50 al cruce de EMAs", d:"EMA50 de 1h y 4h pegadas. El precio no debe romperlas con fuerza."},
+    {t:"Diagonal limpia + RCC", d:"En 5min, mínimo 3 toques. Si no, EMA50 de 5min."},
+    {t:"RR ≥ 2R", d:"TP en máximos/mínimos anteriores. SL detrás de la EMA50 4h o del 0,6 de fibo."}
   ],
   Pink: [
-    "Ruptura de zona S/R en diario + retest (1-2 velitas)",
-    "Ruptura EMA50 4H + estructura con RCC",
-    "Pullback que respeta la EMA50 4H (0.30–0.50)",
-    "Patrón en 1H (cuña / triángulo / canal) + diagonal limpia + RCC",
-    "RR ≥ 2R"
+    {t:"Ruptura de S/R diario + retest", d:"Rompe y ataca, después 1 o 2 velitas de retest. Tendencia clara."},
+    {t:"Ruptura EMA50 4H + estructura con RCC", d:"Rompe también la EMA50 de 1h."},
+    {t:"Pullback que respeta la EMA50 4H", d:"Fibo 0,30–0,50, en modo A-B-C. Tiene que tocar la EMA de 4h antes de girar."},
+    {t:"Patrón en 1H + diagonal + RCC", d:"Cuña, triángulo o canal. No puede romper y confirmar la EMA de 1h."},
+    {t:"RR ≥ 2R", d:"TP al inicio del patrón. SL al final del patrón."}
   ],
   White: [
-    "Vengo de una Pink (ejecutada o solo el movimiento se dio)",
-    "Impulso fuerte + pullback a EMA50 1H (0.38–0.50)",
-    "RCC de la EMA50 1H",
-    "Diagonal limpia + RCC",
-    "RR ≥ 2R"
+    {t:"Vengo de una Pink", d:"Ejecutada, o el movimiento se dio igual."},
+    {t:"Impulso fuerte + pullback a EMA50 1H", d:"Fibo 0,30–0,50. Ruptura y confirmación de la ema, y pullback hacia ella."},
+    {t:"RCC de la EMA50 1H", d:"En el giro previo puede verse un hombro-cabeza-hombro terminando."},
+    {t:"Diagonal limpia + RCC", d:"En 5min, 3 toques. Si no, EMA50 de 5min."},
+    {t:"RR ≥ 2R", d:"TP igual que la Pink. SL detrás de la EMA de 1h."}
   ],
   Black: [
-    "Zona S/R diaria muy importante (mín. 3 toques)",
-    "Consolidación / patrón (cuña-triángulo-canal) con ≥ 2/3 relleno",
-    "EMA50 1H fuera del patrón + no la tocó más de 2 veces recientemente",
-    "Diagonal limpia + RCC",
-    "RR ≥ 2R (ideal ≥ 3R)"
+    {t:"Zona S/R diaria muy importante", d:"Mínimo 3 toques previos: días, semanas o meses. No años."},
+    {t:"Patrón con ≥ 2/3 relleno", d:"Cuña, triángulo, HCH o canal. 3 toques del lado opuesto a la dirección buscada."},
+    {t:"EMA50 1H fuera del patrón", d:"No la tocó más de 2 veces recientemente. EMA de 4h en sobrecompra/sobreventa."},
+    {t:"Diagonal limpia + RCC", d:"En 5min, 3 toques. Buscar divergencias en MACD/RSI."},
+    {t:"RR ≥ 2R (ideal ≥ 3R)", d:"TP en EMA50 de 4h. SL al final del patrón."}
   ],
   Green: [
-    "Movimiento impulsivo fuerte + pullback lento a zona S/R importante",
-    "Patrón (cuña / triángulo / canal) con mín. 3 toques y ≥ 60% relleno",
-    "Diagonal limpia en temporalidad pequeña + RCC",
-    "RR ≥ 2R"
+    {t:"Impulso semanal fuerte a zona S/R", d:"Tendencial sin dudas. Zona horizontal, dinámica o diagonal."},
+    {t:"Patrón diario con ≥ 60% relleno", d:"Pullback complejo y lento. Cuña, triángulo o canal, mínimo 3 toques."},
+    {t:"Diagonal de 1H copiada a 15min", d:"Lo más perfecta posible, al menos 3 toques. RCC para ejecutar."},
+    {t:"RR ≥ 2R", d:"TP al inicio del patrón en diario. SL en mínimo/máximo anterior de 1h."}
   ]
 };
 
-let current = '';
+// Cabeza. `ok` = la respuesta que cumple la regla.
+const CABEZA = [
+  {t:"¿Estás con la cabeza clara?", d:"Sin ansiedad, sin cansancio, sin bronca del trade anterior.", ok:true,
+   warn:"Tu plan: no operar emocional."},
+  {t:"¿Estás tratando de recuperar?", d:"Una pérdida de hoy, o del trade anterior.", ok:false,
+   warn:"Tu plan: no recuperar el mismo día."},
+  {t:"¿Tenés dudas con este setup?", d:"Si lo estás forzando o buscándole la vuelta, cuenta como duda.", ok:false,
+   warn:"Tu plan: si hay dudas, no entro."}
+];
 
-function show(name, btn) {
-  current = name;
-  document.querySelectorAll('.strat-btn').forEach(b => {
-    b.className = 'strat-btn';
-  });
-  const colors = { Blue: 'on-blue', Red: 'on-red', Pink: 'on-pink', White: 'on-white', Black: 'on-black', Green: 'on-green' };
-  btn.classList.add(colors[name]);
+// Gestión. El riesgo máximo depende del estilo.
+const RIESGO_MAX = { Day:1, Swing:1, Scalp:0.5 };
+const GESTION = [
+  {t:"¿SL definido y puesto?", d:"En la plataforma, antes de entrar. No después.", ok:true},
+  {t:"¿El RR llega a 1:2 como mínimo?", d:"Si no llega a 2R, no es tu trade.", ok:true},
+  {t:"¿El riesgo respeta el límite?", d:"", ok:true, dyn:'riesgo'},
+  {t:"¿Tenés menos de 2 trades abiertos?", d:"Máximo 2 posiciones simultáneas.", ok:true}
+];
 
-  const list = LISTS[name];
-  document.getElementById('panel-title').textContent = name + ' · Must-have';
-  document.getElementById('items').innerHTML = list.map((t, i) => `
-    <label class="item" id="item-${i}">
-      <input type="checkbox" onchange="updateScore()">
-      <span>${t}</span>
-    </label>
-  `).join('');
-  document.getElementById('panel').classList.add('visible');
-  updateScore();
-}
+// Valores por defecto de $ por pip para 1 lote. Editables y persistentes.
+const INSTRUMENTOS = {
+  "EUR/USD":10, "GBP/USD":10, "AUD/USD":10, "NZD/USD":10,
+  "USD/JPY":10, "USD/CHF":10, "USD/CAD":10,
+  "EUR/GBP":10, "EUR/JPY":10, "GBP/JPY":10,
+  "XAU/USD":10, "BTC/USD":1, "ETH/USD":1, "Otro":10
+};
 
-function updateScore() {
-  const checks = document.querySelectorAll('#items input[type=checkbox]');
-  let done = 0;
-  checks.forEach((c, i) => {
-    const item = document.getElementById('item-' + i);
-    if (c.checked) {
-      done++;
-      item.classList.add('checked');
-    } else {
-      item.classList.remove('checked');
+const K = 'mc_chk_';
+const lsGet = k => { try { return localStorage.getItem(K+k); } catch(e){ return null; } };
+const lsSet = (k,v) => { try { localStorage.setItem(K+k, v); } catch(e){} };
+const lsDel = k => { try { localStorage.removeItem(K+k); } catch(e){} };
+const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch(e){} };
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+let S = { strat:'', estilo:'', i:0, steps:[], ans:[], lot:null };
+
+function buildSteps(){
+  const pasos = [];
+  CABEZA.forEach(x => pasos.push({...x, g:'cabeza'}));
+  (SETUP[S.strat]||[]).forEach(x => pasos.push({t:x.t, d:x.d, ok:true, g:'setup'}));
+  pasos.push({kind:'calc', g:'gestion'});
+  GESTION.forEach(x => {
+    const p = {...x, g:'gestion'};
+    if(p.dyn === 'riesgo'){
+      const max = RIESGO_MAX[S.estilo] ?? 1;
+      p.d = `${S.estilo}: máximo ${String(max).replace('.',',')}% del capital en este trade.`;
     }
+    pasos.push(p);
   });
-  document.getElementById('score').textContent = done + ' / ' + checks.length;
-  window._lastScore = current + ' · Score: ' + done + '/' + checks.length;
+  return pasos;
 }
 
-function copyScore() {
-  const text = window._lastScore || '';
-  if (!text) return;
-  navigator.clipboard.writeText(text).then(() => {
-    const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 1800);
-  }).catch(() => {
-    prompt('Copiá esto:', text);
-  });
+/* =========================================================
+   HOME
+   ========================================================= */
+function renderHome(){
+  document.getElementById('strat-grid').innerHTML =
+    Object.keys(SETUP).map(s =>
+      `<button class="chip ${S.strat===s?'on-'+s:''}" onclick="pickStrat('${s}')">${s}<small>${SETUP[s].length} items</small></button>`
+    ).join('');
+
+  document.getElementById('estilo-grid').innerHTML =
+    Object.keys(RIESGO_MAX).map(e =>
+      `<button class="chip ${S.estilo===e?'on':''}" onclick="pickEstilo('${e}')">${e}<small>${String(RIESGO_MAX[e]).replace('.',',')}%</small></button>`
+    ).join('');
+
+  const btn = document.getElementById('start-btn');
+  const listo = S.strat && S.estilo;
+  btn.disabled = !listo;
+  btn.textContent = listo ? `Empezar · ${S.strat} ${S.estilo} →` : 'Elegí estrategia y estilo';
 }
 
-function resetChecks() {
-  document.querySelectorAll('#items input[type=checkbox]').forEach(c => c.checked = false);
-  updateScore();
+function pickStrat(s){ buzz(8); S.strat = s; lsSet('strat', s); renderHome(); }
+function pickEstilo(e){ buzz(8); S.estilo = e; lsSet('estilo', e); renderHome(); }
+
+/* =========================================================
+   NAVEGACIÓN
+   ========================================================= */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
 }
+
+function startRun(){
+  if(!S.strat || !S.estilo) return;
+  buzz(14);
+  S.steps = buildSteps();
+  S.i = 0;
+  S.ans = [];
+  S.lot = null;
+  lsDel('run');
+  renderStep();
+}
+
+function newRun(){
+  lsDel('run');
+  S.i = 0; S.ans = []; S.lot = null; S.steps = [];
+  document.getElementById('resume-btn').classList.remove('on');
+  showScreen('s-home');
+  setProgress(0, 'Checklist', '');
+  document.getElementById('back').classList.remove('on');
+  renderHome();
+}
+
+function goBack(){
+  buzz(8);
+  if(S.i <= 0){ newRun(); return; }
+  S.i--;
+  S.ans.length = Math.min(S.ans.length, S.i);
+  saveRun();
+  renderStep();
+}
+
+function setProgress(pct, left, right){
+  document.getElementById('p-fill').style.width = pct + '%';
+  document.getElementById('p-left').textContent = left;
+  document.getElementById('p-right').textContent = right;
+}
+
+const GRUPO_LBL = { cabeza:'Cabeza', setup:'Setup', gestion:'Gestión' };
+
+function renderStep(){
+  if(S.i >= S.steps.length){ renderResult(); return; }
+  const p = S.steps[S.i];
+  document.getElementById('back').classList.add('on');
+  setProgress(S.i / S.steps.length * 100, GRUPO_LBL[p.g], (S.i+1) + ' / ' + S.steps.length);
+
+  if(p.kind === 'calc'){ renderCalc(); showScreen('s-calc'); saveRun(); return; }
+
+  const g = document.getElementById('q-group');
+  g.className = 'q-group g-' + p.g;
+  g.textContent = p.g === 'setup' ? (S.strat + ' · Must-have') : GRUPO_LBL[p.g];
+  document.getElementById('q-text').textContent = p.t;
+  document.getElementById('q-hint').textContent = p.d || '';
+
+  const w = document.getElementById('q-warn');
+  if(p.warn){ w.textContent = p.warn; w.style.display = 'block'; }
+  else w.style.display = 'none';
+
+  showScreen('s-q');
+  saveRun();
+}
+
+function answer(val){
+  buzz(12);
+  const p = S.steps[S.i];
+  S.ans[S.i] = { val, pass: (val === p.ok), g: p.g, t: p.t };
+  S.i++;
+  saveRun();
+  renderStep();
+}
+
+/* =========================================================
+   CALCULADORA
+   ========================================================= */
+function renderCalc(){
+  const inst = document.getElementById('c-inst');
+  if(!inst.options.length){
+    inst.innerHTML = Object.keys(INSTRUMENTOS).map(n => `<option>${n}</option>`).join('');
+  }
+  const savedInst = lsGet('inst');
+  if(savedInst && INSTRUMENTOS[savedInst] !== undefined) inst.value = savedInst;
+
+  const cap = document.getElementById('c-cap');
+  if(!cap.value) cap.value = lsGet('cap') || '';
+
+  const risk = document.getElementById('c-risk');
+  if(!risk.value) risk.value = lsGet('risk') || String(RIESGO_MAX[S.estilo] ?? 1).replace('.', ',');
+
+  document.getElementById('c-pipval').value = pipValFor(inst.value);
+  calc();
+}
+
+function pipValFor(inst){
+  const custom = lsGet('pip_' + inst);
+  return custom !== null ? custom : String(INSTRUMENTOS[inst] ?? 10);
+}
+
+function onInstChange(){
+  const inst = document.getElementById('c-inst').value;
+  lsSet('inst', inst);
+  document.getElementById('c-pipval').value = pipValFor(inst);
+  calc();
+}
+
+function savePipVal(){
+  const inst = document.getElementById('c-inst').value;
+  lsSet('pip_' + inst, document.getElementById('c-pipval').value.trim());
+}
+
+const nOf = id => parseFloat(String(document.getElementById(id).value || '').replace(',', '.'));
+
+function calc(){
+  const cap = nOf('c-cap'), risk = nOf('c-risk'), pips = nOf('c-pips'), pv = nOf('c-pipval');
+  const out = document.getElementById('c-lot'), sub = document.getElementById('c-sub');
+
+  if(cap > 0) lsSet('cap', document.getElementById('c-cap').value.trim());
+  if(risk > 0) lsSet('risk', document.getElementById('c-risk').value.trim());
+
+  if(!(cap > 0) || !(risk > 0)){ out.textContent = '–'; sub.textContent = 'Completá capital y riesgo'; S.lot = null; return; }
+
+  const riesgo$ = cap * risk / 100;
+  const max = RIESGO_MAX[S.estilo] ?? 1;
+  const excede = risk > max + 0.0001;
+
+  if(!(pips > 0) || !(pv > 0)){
+    out.textContent = '–';
+    sub.innerHTML = 'Riesgo: <b>$ ' + riesgo$.toFixed(2) + '</b> · falta la distancia al SL';
+    S.lot = null;
+  } else {
+    const lot = riesgo$ / (pips * pv);
+    out.textContent = lot.toFixed(2);
+    sub.innerHTML = 'Riesgo: <b>$ ' + riesgo$.toFixed(2) + '</b> · ' + pips + ' pips × $' + pv + '/pip';
+    S.lot = { lot: lot.toFixed(2), riesgo: riesgo$.toFixed(2), pct: risk, pips, inst: document.getElementById('c-inst').value };
+  }
+
+  const o = document.querySelector('.out');
+  o.style.borderColor = excede ? 'var(--amber)' : 'var(--accent)';
+  o.style.background = excede ? 'var(--amber2)' : 'var(--accent2)';
+  document.querySelector('.out-lbl').style.color = excede ? 'var(--amber)' : 'var(--accent)';
+  out.style.color = excede ? 'var(--amber)' : 'var(--accent)';
+  if(excede) sub.innerHTML += '<br><span style="color:var(--amber)">Estás arriba del ' + String(max).replace('.', ',') + '% de ' + S.estilo + '</span>';
+}
+
+function afterCalc(){ buzz(12); S.i++; saveRun(); renderStep(); }
+
+/* =========================================================
+   RESULTADO
+   ========================================================= */
+function grupo(g){
+  const items = S.ans.filter(a => a && a.g === g);
+  return { done: items.filter(a => a.pass).length, total: S.steps.filter(p => p.g === g && p.kind !== 'calc').length };
+}
+
+function renderResult(){
+  document.getElementById('back').classList.add('on');
+  setProgress(100, 'Resultado', S.strat + ' · ' + S.estilo);
+
+  const cab = grupo('cabeza'), set = grupo('setup'), ges = grupo('gestion');
+  const fallan = S.ans.filter(a => a && !a.pass);
+  const setupCompleto = set.done === set.total;
+  const todoCompleto = setupCompleto && cab.done === cab.total && ges.done === ges.total;
+
+  const v = document.getElementById('verdict');
+  v.className = 'verdict ' + (todoCompleto ? 'ok' : (setupCompleto ? 'warn' : 'bad'));
+  document.getElementById('v-score').textContent = set.done + ' / ' + set.total;
+
+  let txt;
+  if(todoCompleto) txt = 'Checklist completa. Setup, cabeza y gestión en orden.';
+  else if(setupCompleto) txt = 'El setup está completo, pero hay ' + fallan.length + ' punto' + (fallan.length !== 1 ? 's' : '') + ' fuera de tu plan.';
+  else txt = 'Falta ' + (set.total - set.done) + ' must-have del setup.';
+  document.getElementById('v-txt').textContent = txt;
+
+  const col = (d, t) => d === t ? 'var(--green)' : 'var(--red)';
+  document.getElementById('b-cabeza').textContent = cab.done + '/' + cab.total;
+  document.getElementById('b-cabeza').style.color = col(cab.done, cab.total);
+  document.getElementById('b-setup').textContent = set.done + '/' + set.total;
+  document.getElementById('b-setup').style.color = col(set.done, set.total);
+  document.getElementById('b-gestion').textContent = ges.done + '/' + ges.total;
+  document.getElementById('b-gestion').style.color = col(ges.done, ges.total);
+
+  const box = document.getElementById('miss-box');
+  if(fallan.length){
+    box.style.display = 'block';
+    document.getElementById('miss-title').textContent = 'No se cumple (' + fallan.length + ')';
+    document.getElementById('miss-list').innerHTML = fallan.map(a => `<li>${a.t}</li>`).join('');
+  } else box.style.display = 'none';
+
+  const lotTxt = S.lot ? `<b>Lotaje ${S.lot.lot}</b> · riesgo $${S.lot.riesgo} (${String(S.lot.pct).replace('.', ',')}%) · SL a ${S.lot.pips} pips. ` : '';
+  document.getElementById('reminder').innerHTML =
+    lotTxt + 'Una vez adentro: <b>el SL no se mueve por emoción</b>. Máximo 2 trades abiertos.';
+
+  showScreen('s-res');
+  lsDel('run');
+}
+
+function resumenTexto(){
+  const cab = grupo('cabeza'), set = grupo('setup'), ges = grupo('gestion');
+  let t = `${S.strat} · ${S.estilo} · Score ${set.done}/${set.total}\n`;
+  t += `Cabeza ${cab.done}/${cab.total} · Setup ${set.done}/${set.total} · Gestión ${ges.done}/${ges.total}\n`;
+  if(S.lot) t += `Lotaje ${S.lot.lot} · riesgo $${S.lot.riesgo} (${String(S.lot.pct).replace('.', ',')}%) · SL ${S.lot.pips} pips · ${S.lot.inst}\n`;
+  const fallan = S.ans.filter(a => a && !a.pass);
+  if(fallan.length) t += 'No se cumple:\n' + fallan.map(a => '- ' + a.t).join('\n') + '\n';
+  return t;
+}
+
+function copyResumen(){
+  const txt = resumenTexto();
+  const ok = () => { buzz(16); const t = document.getElementById('toast'); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1700); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(ok).catch(() => fallbackCopy(txt, ok));
+  } else fallbackCopy(txt, ok);
+}
+
+function fallbackCopy(txt, ok){
+  const ta = document.createElement('textarea');
+  ta.value = txt;
+  ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); ok(); } catch(e){ prompt('Copiá esto:', txt); }
+  document.body.removeChild(ta);
+}
+
+/* =========================================================
+   PERSISTENCIA · retomar donde quedaste
+   ========================================================= */
+function saveRun(){
+  if(!S.steps.length) return;
+  lsSet('run', JSON.stringify({ strat:S.strat, estilo:S.estilo, i:S.i, ans:S.ans, lot:S.lot, ts:Date.now() }));
+}
+
+function checkResume(){
+  let r = null;
+  try { r = JSON.parse(lsGet('run') || 'null'); } catch(e){}
+  // Se descarta si tiene más de 6 horas: ya no es el mismo momento de mercado.
+  if(!r || !r.strat || !SETUP[r.strat] || (Date.now() - (r.ts||0)) > 6*3600*1000){ lsDel('run'); return; }
+  const btn = document.getElementById('resume-btn');
+  const total = CABEZA.length + SETUP[r.strat].length + 1 + GESTION.length;
+  btn.textContent = `↻ Retomar ${r.strat} ${r.estilo} · paso ${Math.min(r.i+1, total)} de ${total}`;
+  btn.classList.add('on');
+  window._pendingRun = r;
+}
+
+function resumeRun(){
+  const r = window._pendingRun;
+  if(!r) return;
+  buzz(14);
+  S.strat = r.strat; S.estilo = r.estilo;
+  S.steps = buildSteps();
+  S.ans = r.ans || [];
+  S.lot = r.lot || null;
+  S.i = Math.min(r.i || 0, S.steps.length);
+  renderStep();
+}
+
+/* =========================================================
+   INICIO
+   ========================================================= */
+(function init(){
+  const s = lsGet('strat'), e = lsGet('estilo');
+  if(s && SETUP[s]) S.strat = s;
+  if(e && RIESGO_MAX[e] !== undefined) S.estilo = e;
+  renderHome();
+  checkResume();
+  setProgress(0, 'Checklist', '');
+})();
 </script>
 </body>
 </html>
